@@ -311,6 +311,21 @@
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
+    /* CHECKBOX */
+    .consent-box {
+      display: flex; align-items: flex-start; gap: 10px;
+      max-width: 480px; margin: 12px auto 0;
+      text-align: left;
+    }
+    .consent-box input[type="checkbox"] {
+      width: 16px; height: 16px; min-width: 16px;
+      margin-top: 2px; cursor: pointer; accent-color: var(--blue);
+    }
+    .consent-box label {
+      font-size: 0.78rem; color: var(--muted); line-height: 1.5; cursor: pointer;
+    }
+    .consent-box a { color: var(--blue); }
+
     /* MOBILE */
     @media (max-width: 900px) {
       .mockup-item { grid-template-columns: 1fr; gap: 32px; }
@@ -355,6 +370,13 @@
           <input type="email" class="waitlist-input" placeholder="La tua email professionale" required id="heroEmail" />
           <button type="submit" class="waitlist-btn" id="heroBtn">Voglio accedere</button>
         </form>
+        <div class="consent-box">
+          <input type="checkbox" id="heroConsent" required />
+          <label for="heroConsent">
+            Ho letto e accetto la <a href="/privacy" target="_blank">Privacy Policy</a> 
+            e i <a href="/termini" target="_blank">Termini e Condizioni</a> di Advia.
+          </label>
+        </div>
         <div class="success-msg" id="heroEmailSent" style="display:none;">
           ✅ Email registrata! Completa il tuo profilo per ricevere informazioni personalizzate.
         </div>
@@ -571,6 +593,13 @@
       <input type="email" placeholder="La tua email" required id="ctaEmail" />
       <button type="submit" id="ctaBtn">Iscrivimi</button>
     </form>
+    <div style="display:flex;align-items:flex-start;gap:10px;max-width:440px;margin:10px auto 0;text-align:left;">
+      <input type="checkbox" id="ctaConsent" required style="width:16px;height:16px;min-width:16px;margin-top:2px;cursor:pointer;accent-color:white;" />
+      <label for="ctaConsent" style="font-size:0.78rem;color:rgba(255,255,255,0.7);line-height:1.5;cursor:pointer;">
+        Ho letto e accetto la <a href="/privacy" target="_blank" style="color:white;">Privacy Policy</a> 
+        e i <a href="/termini" target="_blank" style="color:white;">Termini e Condizioni</a>.
+      </label>
+    </div>
     <div class="success-msg" id="ctaEmailSent" style="display:none;background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:white;">
       ✅ Email registrata! Completa il tuo profilo.
     </div>
@@ -628,6 +657,12 @@
     function handleEmailForm(formId, emailId, btnId) {
       document.getElementById(formId).addEventListener('submit', async function(e) {
         e.preventDefault();
+        const consentId = formId === 'heroForm' ? 'heroConsent' : 'ctaConsent';
+        const consent = document.getElementById(consentId);
+        if (consent && !consent.checked) {
+          consent.style.outline = '2px solid red';
+          return;
+        }
         const btn = document.getElementById(btnId);
         pendingEmail = document.getElementById(emailId).value;
         pendingSource = formId;
